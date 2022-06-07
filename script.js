@@ -14,7 +14,7 @@ let listItens = []
 let listNames = [
 	{
 		picture: 'http://randomuser.me/api/portraits/women/94.jpg',
-		country: 'Brasil',
+		country: 'Brazil',
 		name: 'Ana Santos',
 		age: 20,
 		city: 'São Paulo'
@@ -22,8 +22,8 @@ let listNames = [
 
 	{
 		picture: 'http://randomuser.me/api/portraits/women/95.jpg',
-		country: 'Brasil',
-		country: 'Brasil',
+		country: 'Brazil',
+		country: 'Brazil',
 		name: 'Dalva Duarte',
 		age: 54,
 		city: 'São Roque'
@@ -31,8 +31,8 @@ let listNames = [
 
 	{
 		picture: 'http://randomuser.me/api/portraits/women/96.jpg',
-		country: 'Brasil',
-		country: 'Brasil',
+		country: 'Brazil',
+		country: 'Brazil',
 		name: 'Nayra Louise',
 		age: 33,
 		city: 'Cajamar'
@@ -47,7 +47,7 @@ let dataJson = `
 			"name": "Caio Duarte",
 			 "age": 34,
 			 "city": "Cajamar",
-			 "country": "Brasil",
+			 "country": "Brazil",
 			 "picture": "http://randomuser.me/api/portraits/men/57.jpg",
 			 "hobby": {
 				 "first": "Jogos de Pc",
@@ -85,30 +85,39 @@ let dataJson = `
 let response = JSON.parse(dataJson);
 
 //exibit o conteudo da variavel no console
-console.log(response.results);
+//console.log(response.results);
 
 //declarar um array chamado listResults
-let listResults = response.results
+//let listResults = response.results
+let listResults = [];
 
 //Exibindo o conteudo na aba console do navegador
 //console.log(listNames)
 //Listar os nomes das pessoas
-function getData() {
+async function getData() {
+
+	const res = await fetch('https://randomuser.me/api/?results=30');
+
+	//console.log(res.status)
+	//let data = await res.json();
+	const {results} = await res.json()
+	console.log(results)
+
 	//removendo todos os itens da ul result
 	result.innerHTML = ''
 
-	listResults.forEach(user => {
+	results.forEach(user => {
 		//2. passo - criar um elemento li com o item de array
 		const li = document.createElement('li')
 
 		listItens.push(li)
 
 		li.innerHTML = `
-			 <img src="${user.picture}" alt="${user.name}">
+			 <img src="${user.picture.large}" alt="${user.name.first}">
 		   <div class= "user-info">
-					<h4>${user.name}</h4>
-					<p>${user.city} | ${user.country}</p>
-					<p>${user.age} anos</p>
+					<h4>${user.name.first}</h4>
+					<p>${user.location.city} | ${user.location.country}</p>
+					<p>${user.dob.age} anos</p>
 			 </div>
 			`
 
@@ -143,18 +152,20 @@ function searchByCountry(value){
 
 		listResults.forEach(user => {
 
-			if(user.country === value){
+			if(user.location.country === value){
 				const li = document.createElement('li')
 
 				listItens.push(li)
 
+				listResults.push(user)
+
 			li.innerHTML = `
-				<img src="${user.picture}" alt="${user.name}">
-				<div class= "user-info">
-						<h4>${user.name}</h4>
-						<p>${user.city} | ${user.country}</p>
-						<p>${user.age} anos</p>
-				</div>
+			<img src="${user.picture.large}" alt="${user.name.first}">
+			<div class= "user-info">
+				 <h4>${user.name.first}</h4>
+						<p>${user.location.city} | ${user.location.country}</p>
+						<p>${user.dob.age} anos</p>
+			</div>
 				`
 
 			//3. passo - Adiciona o li com o iten na lista de result
